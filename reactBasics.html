@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Basics</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+        // creating a functional component to show the text box for chatbot
+
+        function ChatbotInputBox() {
+            return(
+                <>
+                    <input placeholder="Enter the message to the bot" size = '30'/>
+                    <button>Send</button>
+                </>
+           );
+        }
+
+        function ChatbotUserMessage(props) {
+            const message = props.message;
+            const source = props.user ==='user' ? 'user.png' : "robot.png";
+            return (
+                <div>
+                    {message}
+                    <img src={source} width="30"/> 
+                </div>
+            )
+        }
+        const app = (
+            <>
+                <ChatbotInputBox />
+                <ChatbotUserMessage message="Hello how are you" user="robot"/>
+                <ChatbotUserMessage message="Flip a coin" user="user"/>
+                
+            </>
+        );
+        const container = document.querySelector('.js-container');
+        ReactDOM.createRoot(container).render(app);        
+    </script>
+</body>
+</html>
