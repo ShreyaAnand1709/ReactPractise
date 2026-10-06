@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Basics</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+        // creating a seperate function to show the text 
+        function ProductDetails({productName, productPrice, discount}) {
+            return (
+                <>
+                    <p>{productName}</p>
+                    {discount ? 
+                        <del>
+                            <p>Price: ${productPrice}</p>
+                        </del> 
+                        : 
+                        <p>Price: ${productPrice} </p>
+                    }
+                    {discount && <p>Discount: ${productPrice - discount}</p>}
+                    <button>Add to Cart</button>
+                </>
+            )
+        }
+
+
+        // The app that is getting rendered at the ReacrDOM
+        function App() {
+             return (
+                <>
+                    <ProductDetails productName="Socks" productPrice={19.99} />
+                    <ProductDetails productName="T-shirt" productPrice={29.99} />
+                    <ProductDetails productName="Jeans" productPrice={39.99} discount = {10.00}/>
+                    <ProductDetails productName="pyjama" productPrice={29.99} discount = {5.00}/>
+                </>
+             ); 
+        }
+
+        const container = document.querySelector('.js-container');
+        ReactDOM.createRoot(container).render(<App />);        
+    </script>
+</body>
+</html>

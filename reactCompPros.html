@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Basics</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+        // creating a seperate function to show the text 
+        function LoginInForm() {
+            return (
+                <>
+                    <p>Hello, to my website</p>
+                    <input placeholder="Enter your username" size="40" /><br/>
+                    <input placeholder="Enter your password" size="40" type="password" /><br/>
+                    <button> Login </button>
+                    <button>Sign Up</button>
+                </>
+            )
+        }
+
+
+        // The app that is getting rendered at the ReacrDOM
+        function App() {
+             return (
+                <>
+                    <LoginInForm />
+                </>
+             ); 
+        }
+
+        const container = document.querySelector('.js-container');
+        ReactDOM.createRoot(container).render(<App />);        
+    </script>
+</body>
+</html>
