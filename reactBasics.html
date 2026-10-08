@@ -13,35 +13,108 @@
     <script type="text/babel">
         // creating a functional component to show the text box for chatbot
 
-        function ChatbotInputBox() {
+        function ChatbotInputBox({chatMessage, setChatMessages}) {
+            // creating function for onclick for button
+            function sendMessage() {
+                console.log("Button is pressed");
+            }
+
+            //input text starts with a empty string and later it gets values inside it hence using the states here
+            const [currentInputText, setInputText] = React.useState('');
+            // creating a function for getting the input value from the textbox
+            function setMessage(event) { 
+                setInputText(event.target.value);
+            }
             return(
                 <>
-                    <input placeholder="Enter the message to the bot" size = '30'/>
-                    <button>Send</button>
+                    <input placeholder="Enter the message to the bot" size ="30" onChange={setMessage}/>
+                    <button onClick = {sendMessage}>Send</button>
+                    <br />
                 </>
            );
         }
 
-        function ChatbotUserMessage(props) {
-            const message = props.message;
-            const source = props.user ==='user' ? 'user.png' : "robot.png";
-            return (
-                <div>
-                    {message }
-                    <img src={source} width="30"/> 
-                </div>
-            )
+        function ChatMessage({message, sender}) {
+            return ( 
+                <>
+                    {sender === "user" ? (
+                        <>
+                            <span>{message}</span>
+                            <img src="user.png" width="30" />
+                            <br />
+                        </>
+                        )   : (
+                        <>
+                            <img src="robot.png" width="30" />
+                            <span>{message}</span>
+                            <br />
+                        </>
+                        )
+                    }
+                </>
+            );
         }
-        const app = (
+
+        function ChatbotUserMessage({ chatMessage, sender} ) {
+            
+
+                                                                                                            //     const chatMessage = arrayOfMessages.map((chatMessage) => {
+                                                                                                            //         return (  
+                                                                                                            //             <ChatMessage 
+                                                                                                            //               message = {chatMessage.message}
+                                                                                                            //               sender = {chatMessage.sender}
+                                                                                                            //             />
+                                                                                                            //         );
+                                                                                                            //     });
+                                                                                                            // return chatMessage;
+
+        // function to add a new message to the above array 
+        
+
+        // above method short cut
+        return (
             <>
-                <ChatbotInputBox />
-                <ChatbotUserMessage message="Hello how are you" user="robot"/>
-                <ChatbotUserMessage message="Flip a coin" user="user"/>
-                
+            {arrayOfMessages.map((chatMessage) => {
+                    return ( 
+                     <ChatMessage
+                      message = {chatMessage.message}
+                      sender = {chatMessage.sender}
+                       />
+                    );
+                }
+            )}
             </>
         );
+        }
+
+
+        function App() {
+            const [chatMessage, setChatMessage] = React.useState([
+                {message: "Hello how are you", sender: "user", key: crypto.randomUUID},
+                {message: "I am fine, how are you", sender: "robot", key: crypto.randomUUID},
+                {message:"Flip a coint", sender:"user", key: crypto.randomUUID}
+            ]);
+            function addNewMessage() {
+            setChatMessage(...chatMessage, {
+                message: "test",
+                sender: "user",
+                key: crypto.RandomUUID
+            })
+        }
+            return (
+            <>
+                <ChatbotInputBox 
+                   chatMessage = {chatMessage}
+                   setChatMessages = {SetChatMessage} 
+                />
+                <ChatbotUserMessage 
+                    chatMessage = {chatMessage}
+                />
+            </>
+        );
+        }
         const container = document.querySelector('.js-container');
-        ReactDOM.createRoot(container).render(app);        
+        ReactDOM.createRoot(container).render(<App />);        
     </script>
 </body>
 </html>

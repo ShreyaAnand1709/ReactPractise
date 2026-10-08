@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatePrac1</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+        function CounterCompo({initialCount, updateCount}) { 
+            return( 
+                <>
+                    <button onClick={updateCount}>Clicked {initialCount} times </button> 
+                </>
+            )
+        }
+
+        function Reset({initialCount, set}) {
+            return ( 
+                <>
+                    <button onClick={set}>Reset</button> 
+                </>
+            )
+        }
+
+        function App() {  
+            const [count, setCount] = React.useState(0)
+            console.log("clicked");
+            function updateCount() {
+                setCount(count+1);
+                console.log(count);
+            }
+
+            function setToZero() {
+                setCount(0);
+            }
+            return( 
+                <>
+                    <CounterCompo initialCount={count} updateCount={updateCount}/>
+                    <CounterCompo initialCount={count} updateCount={updateCount}/>
+                    <Reset initialCount={count} set={setToZero}/>
+                </>
+            );
+        }
+
+        const container = document.querySelector(".js-container");
+        ReactDOM.createRoot(container).render(<App />);
+    </script>
+</body>
+</html>

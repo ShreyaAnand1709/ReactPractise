@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> 
+    <title>ChatBotPersonal</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+        // creating the first component for taking the input with a test box and a button
+        function ChatInputTextBox({AddChatMessage}) {
+            const [inputText, setInputTextValue] = React.useState('')
+
+// this is the function that detects the changes of the input field and get the input text
+            function setInputText(event) {
+                setInputTextValue(event.target.value)
+            }
+// this is the function to add the message to the array and then display it
+            function addTheMessage() {
+                AddChatMessage(inputText)
+                setInputTextValue('');
+            }
+
+            function keyPressed(event) {
+                if(event.key === 'Enter') {
+                    addTheMessage();
+                } else if(event.key === 'Escape') {
+                    setInputTextValue('');
+                }
+            }
+
+            return (
+                <div className="inputSection">
+                    <input placeholder="Enter the message to the bot" size ="30" onChange={setInputText} value={inputText} onKeyDown={keyPressed} id="inputText"/>
+                    <button onClick={addTheMessage} id="button">Send</button>
+                    <br />  
+                </div>
+            );
+        }
+// --------------------------------------------------------------------------------------------------------------------
+        // second element where it creating a html tag for each of the text message interaction
+        function ChatAMessage ({message, sender}) {
+            return (
+                <div className="chatboxes"> 
+                    {sender === 'user' ? (
+                        <div className="userChat">
+                            <span>{message}</span>
+                            <img src="user.png" width={30}/>
+                            <br />
+                        </div> 
+                        ) : (
+                        <div className="robotChat">
+                            <img src="robot.png" width={30}/>
+                            <span>{message}</span> 
+                            <br />
+                        </div>
+                    )
+                }
+                </div>
+            );
+        }
+// --------------------------------------------------------------------------------------------------------------------------
+// here i am generating the html tags for all the responsible text message 
+        function ChatMessage({chatMessage}) {
+            return ( 
+                <>
+                    {chatMessage.map((eachChat) => {
+                        return (
+                            <>
+                                <ChatAMessage key={eachChat.key} message = {eachChat.message} sender={eachChat.sender} />
+                            </>
+                        );
+                    }
+                    )} 
+                </>
+            );
+        }
+// ----------------------------------------------------------------------------------------------------------------------------------
+//Adding the async functionality to the getRobot 
+        function waitFunc(ms) {
+            return new Promise((resolve) => {
+                setTimeout(resolve, ms);
+            });
+        }
+// --------------------------------------------------------------------------------------------------------------------
+        async function GetRobotResponse(inputText) {
+            await waitFunc(1000);
+            const inputTextNow = inputText.toLowerCase();
+            let roboReply = 'Sorry! I didnt get you';
+            if(inputTextNow === 'hi') {
+                roboReply = 'Hey! Whatsup';
+            } else if(inputTextNow === 'flip a coin') {
+                if(Math.random() <0.5) {
+                    roboReply = 'You got a tails';
+                } else {
+                    roboReply = 'You got a heads';
+                } 
+            } else if(inputTextNow === `get today's date`) {
+                roboReply = `today's date is ${new Date().toLocaleDateString('en-GB')}`;
+            }
+            return roboReply;
+        }
+// -----------------------------------------------------------------------------------------------------------------------
+        // main function where the app is getting redered and all the components are being places here to work;
+        function App() { 
+// shifting this code from ChatMessaget to here as the other componenet function ChatInput cannot use the add message from that component : lifting state up
+            const [chatMessage, setChatMessage] = React.useState([])
+
+            // function to add the new message to the array when its created
+            async function AddChatMessage(inputText) {
+                const loadingKey = crypto.randomUUID();
+                setChatMessage((chatMessage) => [...chatMessage, 
+                {message:inputText, sender:"user", key:crypto.randomUUID()},
+                {message: "loading", sender:"robot", key:loadingKey}
+                ]);
+//ge the robot reply
+                const robotReply = await GetRobotResponse(inputText);
+//update the value of loading
+                setChatMessage((currentMessage) => 
+            currentMessage.map((eachChat) => {
+                if(eachChat.key === loadingKey) {
+                    return {
+                        ...eachChat,
+                        message: robotReply
+                    };
+                }
+                return eachChat;
+            })
+        );
+    }
+            return ( 
+                <>
+                    <ChatInputTextBox AddChatMessage={AddChatMessage}/>
+                    <ChatMessage chatMessage={chatMessage}/>
+                </>
+            );
+        }
+        const container = document.querySelector('.js-container');
+        ReactDOM.createRoot(container).render(<App />);
+    </script>
+</body>
+</html>

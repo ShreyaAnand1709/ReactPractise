@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatePrac2</title>
+</head>
+<body>
+    <div class="js-container"></div>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+        function App() {
+            const [s,setS] = React.useState('');
+            function showText(event) {
+                setS(event.target.value);
+                console.log(s);
+            }
+
+            function reSetValue() {
+                setS('');
+            }
+
+            function setExample() {
+                setS("Alice")
+            }
+            return ( 
+                <>
+                    <input onChange={showText} value={s}/>
+                    <p >Hi {s}</p> 
+                    <button onClick={reSetValue}> reset</button>
+                    <button onClick={setExample}>example</button>
+                </>
+            );
+        }
+
+        const container = document.querySelector(".js-container");
+        ReactDOM.createRoot(container).render(<App />)
+    </script>
+</body>
+</html>
